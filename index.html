@@ -189,7 +189,7 @@ section { padding: 72px 0; }
 
 /* Tombol kembali ke atas */
 .to-top {
-    position: fixed; right: 18px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); z-index: 40;
+    position: fixed; right: 18px; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); z-index: 40;
     width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer;
     background: var(--green); color: #fff; box-shadow: 0 8px 20px rgba(13, 92, 79, 0.35);
     display: flex; align-items: center; justify-content: center;
@@ -199,18 +199,55 @@ section { padding: 72px 0; }
 .to-top.show { opacity: 1; visibility: visible; transform: none; }
 .to-top svg { width: 22px; height: 22px; }
 
-/* Tombol WhatsApp melayang */
-.wa-float {
+/* Jendela chat melayang */
+.chat-launcher {
     position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 45;
-    display: inline-flex; align-items: center; gap: 10px;
-    height: 56px; padding: 0 22px 0 16px; border-radius: 999px;
-    background: #1fa855; color: #fff; text-decoration: none; font-weight: 600;
-    box-shadow: 0 10px 24px rgba(15, 100, 50, 0.35);
+    width: 60px; height: 60px; border-radius: 50%; border: 0; cursor: pointer;
+    background: var(--green); color: #fff; box-shadow: 0 10px 24px rgba(13, 92, 79, 0.4);
+    display: flex; align-items: center; justify-content: center;
     transition: background .15s, transform .1s;
 }
-.wa-float:hover { background: #178a45; }
-.wa-float:active { transform: translateY(1px); }
-.wa-float svg { width: 28px; height: 28px; flex: none; fill: currentColor; }
+.chat-launcher:hover { background: var(--green-dark); }
+.chat-launcher:active { transform: translateY(1px); }
+.chat-launcher svg { width: 28px; height: 28px; }
+.chat-launcher .i-close { display: none; }
+.chat-launcher[aria-expanded="true"] .i-chat { display: none; }
+.chat-launcher[aria-expanded="true"] .i-close { display: block; }
+
+.chat-panel {
+    position: fixed; right: 18px; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); z-index: 46;
+    width: 360px; max-width: calc(100vw - 24px); height: min(520px, calc(100vh - 130px));
+    display: none; flex-direction: column; background: #fff; border-radius: 18px; overflow: hidden;
+    border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(20, 40, 58, 0.28);
+}
+.chat-panel.open { display: flex; }
+body.chat-open .to-top { display: none; }
+
+.chat-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--green); color: #fff; }
+.chat-avatar { width: 42px; height: 42px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; flex: none; }
+.chat-avatar img { width: 30px; height: auto; }
+.chat-title { flex: 1; min-width: 0; line-height: 1.25; }
+.chat-title strong { display: block; font-weight: 600; }
+.chat-title small { opacity: .85; font-size: 0.82rem; }
+.chat-close { width: 40px; height: 40px; border: 0; border-radius: 10px; background: transparent; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex: none; }
+.chat-close:hover { background: rgba(255, 255, 255, 0.15); }
+.chat-close svg { width: 20px; height: 20px; }
+
+.chat-body { flex: 1; overflow-y: auto; padding: 16px; background: #f1f5f4; display: flex; flex-direction: column; gap: 10px; overscroll-behavior: contain; }
+.msg { max-width: 84%; padding: 10px 14px; border-radius: 14px; font-size: 0.95rem; line-height: 1.45; overflow-wrap: anywhere; }
+.msg time { display: block; text-align: right; font-size: 0.72rem; opacity: .65; margin-top: 4px; }
+.msg.bot { align-self: flex-start; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg.me { align-self: flex-end; background: var(--green); color: #fff; border-bottom-right-radius: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: inherit; font-size: 0.9rem; background: #fff; color: var(--green); border: 1.5px solid var(--green); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.chip:hover { background: var(--mist); }
+
+.chat-form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); background: #fff; }
+.chat-form input { flex: 1; min-width: 0; font: inherit; font-size: 16px; color: var(--ink); background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 0 14px; min-height: 46px; }
+.chat-form input:focus { outline: none; border-color: var(--green); }
+.chat-form button { width: 46px; height: 46px; border: 0; border-radius: 12px; background: var(--green); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex: none; }
+.chat-form button:hover { background: var(--green-dark); }
+.chat-form button svg { width: 20px; height: 20px; }
 
 /* ===== TABLET & HP ===== */
 @media (max-width: 960px) {
@@ -256,8 +293,7 @@ section { padding: 72px 0; }
     .result-wrap { padding-bottom: 20px; }
     .footer-row { flex-direction: column; }
     .site-footer { padding-bottom: 92px; }
-    .wa-float { width: 56px; padding: 0; justify-content: center; }
-    .wa-float span { display: none; }
+    .chat-panel { left: 12px; right: 12px; width: auto; max-width: none; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -276,7 +312,7 @@ section { padding: 72px 0; }
         <a href="#" class="brand" aria-label="Fakultas Humaniora Universitas Baiturrahim, ke bagian atas">
             <img src="logo-ubr.png" alt="Logo Universitas Baiturrahim" id="logoImg">
             <span class="brand-text">
-                <strong>Pelayanan Surat RPL</strong>
+                <strong>Fakultas Humaniora</strong>
                 <span>Universitas Baiturrahim</span>
             </span>
         </a>
@@ -390,10 +426,39 @@ section { padding: 72px 0; }
     </div>
 </footer>
 
-<a class="wa-float" href="https://wa.me/6282279037924?text=Halo%20Admin%2C%20saya%20ingin%20bertanya%20tentang%20layanan%20surat%20akademik%20Fakultas%20Humaniora." target="_blank" rel="noopener" aria-label="Chat WhatsApp admin">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-    <span>Chat Admin</span>
-</a>
+<button class="chat-launcher" id="chatLauncher" type="button" aria-label="Buka chat dengan admin" aria-expanded="false" aria-controls="chatPanel">
+    <svg class="i-chat" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 5.92 2 10.75c0 2.55 1.27 4.84 3.3 6.43-.1 1.23-.55 2.55-1.5 3.57a.5.5 0 0 0 .5.83c2.1-.4 3.78-1.2 4.9-1.94.9.23 1.84.36 2.8.36 5.52 0 10-3.92 10-8.75S17.52 2 12 2Z"/></svg>
+    <svg class="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+</button>
+
+<section class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle">
+    <div class="chat-head">
+        <div class="chat-avatar"><img src="logo-ubr.png" alt="" id="chatLogo"></div>
+        <div class="chat-title">
+            <strong id="chatTitle">Admin Layanan Surat</strong>
+            <small>Fakultas Humaniora &middot; lanjut via WhatsApp</small>
+        </div>
+        <button class="chat-close" id="chatClose" type="button" aria-label="Tutup chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+    </div>
+
+    <div class="chat-body" id="chatBody" aria-live="polite">
+        <div class="msg bot"><span>Halo, selamat datang di Layanan Surat Akademik Fakultas Humaniora. Ada yang bisa kami bantu?</span><time data-now></time></div>
+        <div class="chips">
+            <button class="chip" type="button" data-text="Saya ingin mengajukan Surat Keterangan Aktif Kuliah.">Suket Aktif Kuliah</button>
+            <button class="chip" type="button" data-text="Saya ingin mengajukan Surat Penelitian.">Surat Penelitian</button>
+            <button class="chip" type="button" data-text="Saya ingin menanyakan status surat saya.">Cek status surat</button>
+        </div>
+    </div>
+
+    <form class="chat-form" id="chatForm" autocomplete="off">
+        <input type="text" id="chatInput" placeholder="Ketik pesan..." aria-label="Ketik pesan" enterkeyhint="send">
+        <button type="submit" aria-label="Kirim pesan">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6 3.39 10.1 15 12 3.39 13.9z"/></svg>
+        </button>
+    </form>
+</section>
 
 <button class="to-top" id="toTop" type="button" aria-label="Kembali ke atas">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -456,6 +521,63 @@ section { padding: 72px 0; }
     });
     var logo = document.getElementById('logoImg');
     logo.addEventListener('error', function () { logo.style.display = 'none'; });
+
+    /* 5. Jendela chat: pesan dikirim ke WhatsApp admin */
+    var WA_NUMBER = '6282279037924';
+    var launcher  = document.getElementById('chatLauncher');
+    var panel     = document.getElementById('chatPanel');
+    var chatBody  = document.getElementById('chatBody');
+    var chatForm  = document.getElementById('chatForm');
+    var chatInput = document.getElementById('chatInput');
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    function nowText() { var d = new Date(); return pad(d.getHours()) + '.' + pad(d.getMinutes()); }
+    document.querySelectorAll('[data-now]').forEach(function (t) { t.textContent = nowText(); });
+
+    function setChat(open) {
+        panel.classList.toggle('open', open);
+        launcher.setAttribute('aria-expanded', open ? 'true' : 'false');
+        launcher.setAttribute('aria-label', open ? 'Tutup chat' : 'Buka chat dengan admin');
+        document.body.classList.toggle('chat-open', open);
+        if (open) { setTimeout(function () { chatInput.focus(); }, 50); }
+    }
+    launcher.addEventListener('click', function () { setChat(!panel.classList.contains('open')); });
+    document.getElementById('chatClose').addEventListener('click', function () { setChat(false); launcher.focus(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('open')) setChat(false); });
+
+    var chatLogo = document.getElementById('chatLogo');
+    chatLogo.addEventListener('error', function () { chatLogo.parentNode.style.display = 'none'; });
+
+    function addMsg(text, who) {
+        var box = document.createElement('div');
+        box.className = 'msg ' + who;
+        var span = document.createElement('span');
+        span.textContent = text;
+        var t = document.createElement('time');
+        t.textContent = nowText();
+        box.appendChild(span);
+        box.appendChild(t);
+        chatBody.appendChild(box);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    chatBody.addEventListener('click', function (e) {
+        var chip = e.target.closest('.chip');
+        if (!chip) return;
+        chatInput.value = chip.getAttribute('data-text');
+        chatInput.focus();
+    });
+
+    chatForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = chatInput.value.trim();
+        if (!text) { chatInput.focus(); return; }
+        addMsg(text, 'me');
+        chatInput.value = '';
+        addMsg('Terima kasih. Pesan Anda dibuka di WhatsApp admin, tekan tombol kirim di WhatsApp untuk melanjutkan.', 'bot');
+        var url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent('Halo Admin, ' + text);
+        window.open(url, '_blank', 'noopener');
+    });
 })();
 </script>
 
